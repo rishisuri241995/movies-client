@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script> 
+           $(window).bind("load", function () {
+                fetch('http://localhost:8080/Assignment1_MovieRestService/resources/client/all')
+                        .then(function (response) {
+                            return response.json();
+                        }).then(function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var commentDiv = document.createElement('tr');
+                        commentDiv.innerHTML = '<td>'+data[i].title+'</td>\n\
+                                                <td>'+data[i].releaseDate+
+                                                '</td><td data-toggle="modal" data-toggle="tooltip" title="View" data-id="'+data[i].id+'" data-target="#myModal"> \n\
+                                                <a type="submit" name="updateid" value="${movie.id}" class="btn btn-primary"><i class="fas fa-eye"></i></a></td>';
+                        document.getElementById('mainContainer').appendChild(commentDiv);
+                    };
+                });
+            });
+             $(document).ready(function () {
+                $('#myModal').on('show.bs.modal', function (e) {
+                    var movieid = $(e.relatedTarget).attr('data-id');
+                    console.log(movieid);
+                    fetch('http://localhost:8080/Assignment1_MovieRestService/resources/client/all/' + movieid)
+                            .then(function (response) {
+                                return response.json();
+                            }).then(function (data) {
+                        var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(data.image)));
+                        var image = document.getElementById('img');
+                        image.src = 'data:image/jpg;base64,' + base64String;
+                        document.getElementById('title').innerHTML = data.title;
+                        document.getElementById('description').innerHTML = data.description;
+                        document.getElementById('producer').innerHTML = 'Producer: '+data.producer;
+                        document.getElementById('director').innerHTML = 'Director: '+data.director;
+                    });
+                });
+            });   
+        </script>
+        <title>Movies</title>
+    </head>
+    <body>
+	<!-- main -->
+         <form action="MoviesServlet" method="POST">
+	<div class="main-w3layouts wrapper">
+		<h1>MOVIES</h1>
+                <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <table id="mainTable" class="table table-hover table-bordered">
+                          <thead>
+                            <tr>
+                              <th scope="col">Title</th>
+                              <th scope="col">Release Date</th>
+                            </tr>
+                          </thead>
+                          <tbody id="mainContainer">
+                          </tbody>
+                        </table>
+                          <div class="modal fade" id="myModal" role="dialog">
+                            <div class="modal-dialog">
+
+                                <div class="modal-content">
+                                    
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><span id="title"></span></h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card" style="margin:0 auto">
+                                            <img class="card-img-top"  id="img" style="width:100%">
+                                            <div class="card-body">
+                                                <h4 class="card-title" ></h4>
+                                                <p class="card-text" id="description"></p>
+                                                <p class="card-text" id="producer"></p>
+                                                <p class="card-text" id="director"></p>
+                                                <a href="#" class="btn btn-primary">Watch Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+		<!-- copyright -->
+		<div class="myright fixed-bottom">
+			<p>© 2020 MovieBizz. All rights reserved | Design by Rishi Suri</p>
+		</div>
+		<!-- //copyright -->
+		<ul class="bubbles">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+         </form>
+</body>
+
+
+</html>
+
